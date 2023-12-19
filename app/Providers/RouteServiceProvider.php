@@ -34,6 +34,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/api.php'));
 
             Route::middleware('web')
+               ->namespace("App\Http\Controllers") // gloabe Controller namespace injection
                 ->group(base_path('routes/web.php'));
         });
     }
