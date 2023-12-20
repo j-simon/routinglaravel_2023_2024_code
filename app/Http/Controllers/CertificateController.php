@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class MeetingController extends Controller
+class CertificateController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -12,7 +12,7 @@ class MeetingController extends Controller
     public function index()
     {
         //
-        echo "jau, hat geklappt! wir sind per Get hier hin gekommen";
+        echo "CertificateController - index aufgerufen!";
     }
 
     /**
@@ -20,8 +20,8 @@ class MeetingController extends Controller
      */
     public function create()
     {
-        //
-        echo "jau, hat geklappt! wir sind per Get hier hin gekommen , es ist /create";
+        // uebung_06
+        return "Zertifikat erstellen";
     }
 
     /**
@@ -30,7 +30,6 @@ class MeetingController extends Controller
     public function store(Request $request)
     {
         //
-        echo "jau, hat geklappt! wir sind per Post hier hin gekommen";
     }
 
     /**
@@ -38,20 +37,8 @@ class MeetingController extends Controller
      */
     public function show(string $id)
     {
-        
-        echo "hai, von show!, du hast $id übergeben<br>";
-        // etwas sinnvolles gecodet
-        
-        // Display the specified resource.
-        
-        $db = new \PDO("mysql:host=localhost;dbname=test", "root", "root");
-        $sqlBefehl = "SELECT * FROM  meetings WHERE id=".$id;
-        echo $sqlBefehl."<br>";
-        $stmt = $db->query($sqlBefehl);
-        $datensaetze=$stmt->fetchAll();
-        var_dump($datensaetze);
-
-        
+        // uebung_06
+        return "Zertifikat mit ID: ".$id;
     }
 
     /**
@@ -60,7 +47,6 @@ class MeetingController extends Controller
     public function edit(string $id)
     {
         //
-        echo "hai, von edit!, du hast $id übergeben";
     }
 
     /**
@@ -69,7 +55,6 @@ class MeetingController extends Controller
     public function update(Request $request, string $id)
     {
         //
-        echo "jau, hat geklappt! wir sind per Put hier hin gekommen";
     }
 
     /**
@@ -78,6 +63,5 @@ class MeetingController extends Controller
     public function destroy(string $id)
     {
         //
-        echo "jau, hat geklappt! wir sind per Delete hier hin gekommen";
     }
 }

@@ -13,6 +13,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         //
-        "/meeting*"
+        "/m*" // hier werden alle route die mit m anfangen vom schutzsystem ausgenommen
     ];
 }

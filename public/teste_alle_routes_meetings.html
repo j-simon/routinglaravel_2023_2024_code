@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste alle 7 Routen meetings</title>
+</head>
+
+<body>
+    <h4>1. Route</h4>
+    <a href="meetings">teste bitte die GET Route auf /meetings !</a>
+    <form action="meetings" method="GET">
+        <button type="submit">teste bitte die GET Route auf /meetings !</button>
+    </form>
+    <br>
+
+    <h4>2. Route</h4>
+    <form action="meetings" method="POST">
+        <button type="submit">teste bitte die POST Route auf /meetings !</button>
+    </form>
+    <br>
+
+    <h4>3. Route</h4>
+    <a href="meetings/create">teste bitte die GET Route auf /meetings/create !</a>
+    <form action="meetings/create" method="GET">
+        <button type="submit">teste bitte die GET Route auf /meetings !</button>
+    </form>
+ <br>
+
+    <h4>4. Route - show</h4>
+    <a href="meetings/1">teste bitte die GET Route auf /meetings/{meeting} !</a>
+    <form action="meetings/1" method="GET">
+        <button type="submit">teste bitte die GET Route auf /meetings/{meeting} !</button>
+    </form>
+
+    <h4>5. Route</h4>
+    <form action="meetings/32178213" method="POST">
+        <input  type="hidden"  name="_method" value="PUT">
+        <button type="submit">teste bitte die PUT Route auf /meetings/{meeting} !</button>
+    </form>
+
+    <h4>6. Route</h4>
+    <form action="meetings/32178213" method="POST">
+        <input  type="hidden"  name="_method" value="DELETE">
+        <button type="submit">teste bitte die DELETE Route auf /meetings/{meeting} !</button>
+    </form>
+
+    <h4>7. Route</h4>
+    <a href="meetings/Jens/edit">teste bitte die GET Route auf /meetings/{meeting}/edit !</a>
+    <form action="meetings/32178213/edit" method="GET">
+        <button type="submit">teste bitte die GET Route auf /meetings/{meeting}/edit !</button>
+    </form>
+</body>
+
+</html>
