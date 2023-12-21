@@ -16,13 +16,17 @@ use Illuminate\Http\Request;
 
 
 Route::get('/', function () { // / Startseite
+      return view("welcome"); // im ordner resources/views/welcome.blade.php
+  });
 
-    return view("welcome");
+
+Route::get("/seite2", function () { // seite2
+    echo "hallo das 2. /seite"; //return view("seite2");
 });
 
 
 Route::get("/seite2", function () { // seite2
-    return view("seite2");
+    echo "hallo das 2. /seite";
 });
 
 Route::get("/impressum", function () { // impressum
@@ -146,12 +150,15 @@ Route::get("/testroute5/{id}", "TestController@hierWirdDieRouteAusgecodet"); // 
 
 Route::get("/testroute6/{id}", [App\Http\Controllers\TestController::class, "hierWirdDieRouteAusgecodet"]);
 
-Route::get("/testroute7","Test2Controller"); // invokable / nur eine Methode, die ohen speziellen Namen aufgerufen wird
+Route::get("/testroute7", "Test2Controller"); // invokable / nur eine Methode, die ohen speziellen Namen aufgerufen wird
 
 //
 Route::get("/impressum", "FooterMenuController@gibImpressumAus"); // Standard-Controller
+
 Route::get("/agb", "FooterMenuController@gibAgbAus");
+
 Route::get("/datenschutz", "FooterMenuController@gibDatenschutzAus");
+
 
 
 // 7 Methoden muessen mit routes aktiviert 
@@ -192,5 +199,125 @@ Route::resource('certificates', 'CertificateController')->except(['index', 'edit
 Route::get("/a/{a}/b/{b}", "TestController@ab");
 
 
-Route::get("download_picture","PictureController@download");
-Route::get("show_picture","PictureController@show");
+Route::get("download_picture", "PictureController@download");
+Route::get("show_picture", "PictureController@show");
+
+
+/* 
+	uebung_07
+	
+*/
+
+use Symfony\Component\HttpFoundation\Response;
+
+
+Route::get('question', function (Request $request) {
+
+    if (!$request->filled('id')) { // keine id! url 1.
+
+        return response('Ein Fehler ist aufgetreten, da keine id übergeben wurde', Response::HTTP_NOT_FOUND);
+    } elseif ($request->filled(['id', 'question']) && $request->file === "true") { // id, questeion file=true url 2.
+
+        $id = $request->id;
+        $newname = $id . ".png";
+
+        return response()->download('assets/image/Success.png', $newname);
+    } elseif ($request->has('id') && !$request->filled('question')) { // id, keine question url 3.
+
+        return redirect()->away('https://www.webmasters-fernakademie.de');
+    } elseif ($request->filled(['id', 'question']) && $request->file !== "true") { // id,question, file=false url 4.
+
+        return "Ihre Frage wurde erfolgreich gespeichert.";
+    }
+});
+
+
+// Dependency Injection
+Route::get("/request_test", function (Request $request) {
+    // $vorname = "jens";
+    // dump($vorname);
+
+    $vornamen = ["Jens", "Tim", "Anne"];
+    //dd($vornamen); // dump und die // dd
+    echo "hier gehts weiter";
+    //var_dump($vornamen);
+
+    //dump($request);
+});
+
+// Loesung Aufbau 7
+
+
+/*
+
+    1 Wenn keine »id« vorhanden ist oder die »id« null ist, 
+            soll eine Fehlermeldung mit einem HTTP-Statuscode 404 zurückgegeben werden.
+    2 Wenn der Parameter »file« true ist, also nicht null oder false, 
+            soll das Bild Success.png heruntergeladen werden. Der Name der Datei soll der Wert des »id«-Parameters + die Endung .png sein. Die Parameter »question« und »id« dürfen ebenfalls nicht null sein.
+    3 Wenn die »question« nicht vorhanden ist, 
+            soll auf die Seite der Akademie "https://www.webmasters-fernakademie.de/" weitergeleitet werden. Die »id« soll aber vorhanden sein.
+    4 Wenn die »question« sowie die »id« vorhanden sind, 
+            soll ein kleiner individueller Text wiedergegeben werden. Dieser soll bestätigen, dass die Frage gespeichert wurde. Der Statuscode soll 200 sein.
+
+
+
+    anforderung 4 : http://routinglaravel.test/question?question=Warum%20ist%20die%20Erde%20rund?&id=3&file=false
+    
+    anforderung 1 : http://routinglaravel.test/question  ? question=Warum%20ist%20die%20Erde%20rund?
+    
+    anforderung 2 : http://routinglaravel.test/question  ? question=Warum%20ist%20die%20Erde%20rund?&id=3&file=true
+    
+    anforderung 3: http://routinglaravel.test/question ?  id=3&file=false
+*/
+
+Route::get("/question", function (Request $request) {
+    echo "funktioniert!<br>";
+
+    // 1 soll Fehlermeldung mit einem HTTP-Statuscode 404 zurückgegeben
+    if (!$request->has('id')   || !$request->filled('id')) {
+        return response('Hallo Welt', 404);
+    } else if ($request->input("file") === "true" && filled(['id', 'questions'])) {
+        // 2 soll das Bild Success.png heruntergeladen werden. 
+        // Der Name der Datei soll der Wert des »id«-Parameters + die Endung .png sein.
+        return response()->download("assets/image/Success.png", $request->id . ".png"); //   8779787.png
+    } else if ($request->missing('question')) {
+    // 3 soll auf die Seite der Akademie "https://www.webmasters-fernakademie.de/" weitergeleitet werden
+        return redirect()->away('https://www.webmasters-fernakademie.de/');   
+    } else if ($request->has(["question","id"])) {
+    // 4 soll ein kleiner individueller Text wiedergegeben werden. Dieser soll bestätigen, dass die Frage gespeichert wurde.
+    // Der Statuscode soll 200 sein.
+        return "Frage wurde gespeichert";
+    }
+});
+
+
+
+Route::get("/impressum2",function(){
+
+    return view("footermenue.impressum");
+});
+
+Route::get("/daten_ausgeben",function(){
+
+    // Daten
+    $daten=[
+        [
+            'id'=> 1,
+            'vorname' => "Jens",
+            'nachname' => "Simon"
+        ],
+        [
+            'id'=> 2,
+            'vorname' => "Anne",
+            'nachname' => "Schmidt"
+        ],
+        [
+            'id'=> 3,
+            'vorname' => "Tim",
+            'nachname' => "Müller"
+        ],
+    ];
+    
+
+    return view("daten_ausgeben",compact("daten"));
+});

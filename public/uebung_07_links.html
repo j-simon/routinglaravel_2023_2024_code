@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <a href="http://routinglaravel.test/question?question=Warum%20ist%20die%20Erde%20rund?">1 Wenn keine »id« vorhanden ist oder die »id« null ist, 
+        soll eine Fehlermeldung mit einem HTTP-Statuscode 404 zurückgegeben werden.</a><br><br>
+        <a href="http://routinglaravel.test/question?question=Warum%20ist%20die%20Erde%20rund?&id=3&file=true">
+            2 Wenn der Parameter »file« true ist, also nicht null oder false, 
+            soll das Bild Success.png heruntergeladen werden. Der Name der Datei soll der Wert des »id«-Parameters + die Endung .png sein. Die Parameter »question« und »id« dürfen ebenfalls nicht null sein.
+        </a><br><br>
+        <a href="http://routinglaravel.test/question?id=3&file=false">3 Wenn die »question« nicht vorhanden ist, 
+            soll auf die Seite der Akademie "https://www.webmasters-fernakademie.de/" weitergeleitet werden. Die »id« soll aber vorhanden sein.</a><br><br>
+<a href="http://routinglaravel.test/question?question=Warum%20ist%20die%20Erde%20rund?&id=3&file=false">4 Wenn die »question« sowie die »id« vorhanden sind, 
+    soll ein kleiner individueller Text wiedergegeben werden. Dieser soll bestätigen, dass die Frage gespeichert wurde. Der Statuscode soll 200 sein.</a>            
+</body>
+</html>
