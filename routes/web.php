@@ -321,3 +321,86 @@ Route::get("/daten_ausgeben",function(){
 
     return view("daten_ausgeben",compact("daten"));
 });
+
+// uebung_09 + uebung_10
+Route::get("/names","CertificateController@nameList");
+
+// uebung_11
+Route::get("/users","CertificateController@showUser");
+
+// teste seite 1 für blade inheritance / nutzung einer vorlage
+Route::get("/seite_1",function(){
+    return view('seite1_aus_vorlage');
+});
+
+Route::get("/seite_2",function(){
+    $users = [
+        [
+        'name' => 'Cathy Gleichner',
+        'email' => 'Cristobal_Volkman89@hotmail.com',
+        'phone' => '1-102-339-0647 x06086',
+        'age' => '14',
+      ],
+      [
+        'name' => 'Rashad Bartoletti',
+        'email' => 'Josephine70@gmail.com',
+        'age' => '23',
+      ],
+      [
+        'name' => 'Anabel Crooks',
+        'email' => 'Lambert.Braun38@hotmail.com',
+        'phone' => '1-455-074-9861 x97241',
+        'age' => '56',
+      ],
+      [
+        'name' => 'Ova Howe',
+        'email' => 'Diego_Turner@yahoo.com',
+        'age' => '4',
+      ],
+      [
+        'name' => 'Loy Balistreri',
+        'email' => 'Emily.Senger68@hotmail.com',
+        'age' => '87',
+      ],
+      [
+        'name' => 'Tamia Parisian',
+        'email' => 'Arlie77@gmail.com',
+        'phone' => '633.048.2602',
+        'age' => '13',
+      ],
+      [
+        'name' => 'Demario Boehm',
+        'email' => 'Annie.MacGyver@yahoo.com',
+        'phone' => '258.282.8669 x9776',
+        'age' => '35',
+      ],
+      [
+        'name' => 'Tianna Jacobi I',
+        'email' => 'Elliot32@hotmail.com',
+        'age' => '43',
+      ],
+      [
+        'name' => 'Rosemary Heidenreich',
+        'email' => 'Cornelius.King23@hotmail.com',
+        'phone' => '638-129-2815 x184',
+        'age' => '54',
+      ],
+      [
+        'name' => 'Jonas Gaylord',
+        'email' => 'Wilburn14@yahoo.com',
+        'phone' => '(348) 253-3467 x129',
+        'age' => '49',
+      ],
+      [
+        'name' => 'Juanita Luettgen PhD',
+        'email' => 'Kaelyn_Predovic@hotmail.com',
+        'phone' => '(229) 085-6914',
+        'age' => '27',
+      ],
+      
+   
+   
+     
+    ];
+    return view('seite2_aus_vorlage',compact('users'));
+});
