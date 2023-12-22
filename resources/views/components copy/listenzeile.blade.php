@@ -1,0 +1,1 @@
+<li style="color:{{$farbe}}">{{$username}}</li>
