@@ -16,8 +16,8 @@ use Illuminate\Http\Request;
 
 
 Route::get('/', function () { // / Startseite
-      return view("welcome"); // im ordner resources/views/welcome.blade.php
-  });
+    return view("welcome"); // im ordner resources/views/welcome.blade.php
+});
 
 
 Route::get("/seite2", function () { // seite2
@@ -281,126 +281,191 @@ Route::get("/question", function (Request $request) {
         // Der Name der Datei soll der Wert des »id«-Parameters + die Endung .png sein.
         return response()->download("assets/image/Success.png", $request->id . ".png"); //   8779787.png
     } else if ($request->missing('question')) {
-    // 3 soll auf die Seite der Akademie "https://www.webmasters-fernakademie.de/" weitergeleitet werden
-        return redirect()->away('https://www.webmasters-fernakademie.de/');   
-    } else if ($request->has(["question","id"])) {
-    // 4 soll ein kleiner individueller Text wiedergegeben werden. Dieser soll bestätigen, dass die Frage gespeichert wurde.
-    // Der Statuscode soll 200 sein.
+        // 3 soll auf die Seite der Akademie "https://www.webmasters-fernakademie.de/" weitergeleitet werden
+        return redirect()->away('https://www.webmasters-fernakademie.de/');
+    } else if ($request->has(["question", "id"])) {
+        // 4 soll ein kleiner individueller Text wiedergegeben werden. Dieser soll bestätigen, dass die Frage gespeichert wurde.
+        // Der Statuscode soll 200 sein.
         return "Frage wurde gespeichert";
     }
 });
 
 
 
-Route::get("/impressum2",function(){
+Route::get("/impressum2", function () {
 
     return view("footermenue.impressum");
 });
 
-Route::get("/daten_ausgeben",function(){
+Route::get("/daten_ausgeben", function () {
 
     // Daten
-    $daten=[
+    $daten = [
         [
-            'id'=> 1,
+            'id' => 1,
             'vorname' => "Jens",
             'nachname' => "Simon"
         ],
         [
-            'id'=> 2,
+            'id' => 2,
             'vorname' => "Anne",
             'nachname' => "Schmidt"
         ],
         [
-            'id'=> 3,
+            'id' => 3,
             'vorname' => "Tim",
             'nachname' => "Müller"
         ],
     ];
-    
 
-    return view("daten_ausgeben",compact("daten"));
+
+    return view("daten_ausgeben", compact("daten"));
 });
 
 // uebung_09 + uebung_10
-Route::get("/names","CertificateController@nameList");
+Route::get("/names", "CertificateController@nameList");
 
 // uebung_11
-Route::get("/users","CertificateController@showUser");
+Route::get("/users", "CertificateController@showUser");
 
 // teste seite 1 für blade inheritance / nutzung einer vorlage
-Route::get("/seite_1",function(){
+Route::get("/seite_1", function () {
     return view('seite1_aus_vorlage');
 });
 
-Route::get("/seite_2",function(){
+Route::get("/seite_2", function () {
     $users = [
         [
-        'name' => 'Cathy Gleichner',
-        'email' => 'Cristobal_Volkman89@hotmail.com',
-        'phone' => '1-102-339-0647 x06086',
-        'age' => '14',
-      ],
-      [
-        'name' => 'Rashad Bartoletti',
-        'email' => 'Josephine70@gmail.com',
-        'age' => '23',
-      ],
-      [
-        'name' => 'Anabel Crooks',
-        'email' => 'Lambert.Braun38@hotmail.com',
-        'phone' => '1-455-074-9861 x97241',
-        'age' => '56',
-      ],
-      [
-        'name' => 'Ova Howe',
-        'email' => 'Diego_Turner@yahoo.com',
-        'age' => '4',
-      ],
-      [
-        'name' => 'Loy Balistreri',
-        'email' => 'Emily.Senger68@hotmail.com',
-        'age' => '87',
-      ],
-      [
-        'name' => 'Tamia Parisian',
-        'email' => 'Arlie77@gmail.com',
-        'phone' => '633.048.2602',
-        'age' => '13',
-      ],
-      [
-        'name' => 'Demario Boehm',
-        'email' => 'Annie.MacGyver@yahoo.com',
-        'phone' => '258.282.8669 x9776',
-        'age' => '35',
-      ],
-      [
-        'name' => 'Tianna Jacobi I',
-        'email' => 'Elliot32@hotmail.com',
-        'age' => '43',
-      ],
-      [
-        'name' => 'Rosemary Heidenreich',
-        'email' => 'Cornelius.King23@hotmail.com',
-        'phone' => '638-129-2815 x184',
-        'age' => '54',
-      ],
-      [
-        'name' => 'Jonas Gaylord',
-        'email' => 'Wilburn14@yahoo.com',
-        'phone' => '(348) 253-3467 x129',
-        'age' => '49',
-      ],
-      [
-        'name' => 'Juanita Luettgen PhD',
-        'email' => 'Kaelyn_Predovic@hotmail.com',
-        'phone' => '(229) 085-6914',
-        'age' => '27',
-      ],
-      
-   
-   
-     
+            'name' => 'Cathy Gleichner',
+            'email' => 'Cristobal_Volkman89@hotmail.com',
+            'phone' => '1-102-339-0647 x06086',
+            'age' => '14',
+        ],
+        [
+            'name' => 'Rashad Bartoletti',
+            'email' => 'Josephine70@gmail.com',
+            'age' => '23',
+        ],
+        [
+            'name' => 'Anabel Crooks',
+            'email' => 'Lambert.Braun38@hotmail.com',
+            'phone' => '1-455-074-9861 x97241',
+            'age' => '56',
+        ],
+        [
+            'name' => 'Ova Howe',
+            'email' => 'Diego_Turner@yahoo.com',
+            'age' => '4',
+        ],
+        [
+            'name' => 'Loy Balistreri',
+            'email' => 'Emily.Senger68@hotmail.com',
+            'age' => '87',
+        ],
+        [
+            'name' => 'Tamia Parisian',
+            'email' => 'Arlie77@gmail.com',
+            'phone' => '633.048.2602',
+            'age' => '13',
+        ],
+        [
+            'name' => 'Demario Boehm',
+            'email' => 'Annie.MacGyver@yahoo.com',
+            'phone' => '258.282.8669 x9776',
+            'age' => '35',
+        ],
+        [
+            'name' => 'Tianna Jacobi I',
+            'email' => 'Elliot32@hotmail.com',
+            'age' => '43',
+        ],
+        [
+            'name' => 'Rosemary Heidenreich',
+            'email' => 'Cornelius.King23@hotmail.com',
+            'phone' => '638-129-2815 x184',
+            'age' => '54',
+        ],
+        [
+            'name' => 'Jonas Gaylord',
+            'email' => 'Wilburn14@yahoo.com',
+            'phone' => '(348) 253-3467 x129',
+            'age' => '49',
+        ],
+        [
+            'name' => 'Juanita Luettgen PhD',
+            'email' => 'Kaelyn_Predovic@hotmail.com',
+            'phone' => '(229) 085-6914',
+            'age' => '27',
+        ],
+
+
+
+
     ];
-    return view('seite2_aus_vorlage',compact('users'));
+    return view('seite2_aus_vorlage', compact('users'));
+});
+
+// PDO einheitliche Schnittstelle für DBMS (MySql,...)
+// klassisches PHP für PDO, Laravel bebötigt das nicht!
+//$db = new PDO('mysql:host=localhost;dbname=routinglaravel;port=3306');
+//$db2 = new PDO('mysql:host=localhost;dbname=te_db_fuer_laravel;port=3306');
+
+use Illuminate\Support\Facades\DB;
+
+Route::get("/raw_sql_insert", function () {
+
+    // RAW SQL-Befehl
+    // CRUD muss möglich sein
+    // DML-SQL
+
+    // Create
+    echo "<br>Benutzer mit id 1 eintragen<br>";
+    DB::insert('INSERT INTO benutzer (bezeichnung,created_at,updated_at) 
+                VALUES (?,?,?)', ["Die Anne", "2024-01-02", "2024-01-02"]);
+
+    // Read
+    echo "<br>";
+    $benutzer = DB::select('SELECT * FROM benutzer');
+    foreach ($benutzer as $data) {
+        echo $data->id, " ", $data->bezeichnung, " ", $data->created_at, " ", $data->updated_at . "<br>";
+    }
+
+    echo "<br>Benutzer mit id 2 eintragen<br>";
+    DB::insert('INSERT INTO benutzer (bezeichnung,created_at,updated_at) 
+                VALUES (?,?,?)', ["Der Jens", "2024-01-02", "2024-01-02"]);
+
+    // Read
+    echo "<br>";
+    $benutzer = DB::select('SELECT * FROM benutzer');
+    foreach ($benutzer as $data) {
+        echo $data->id, " ", $data->bezeichnung, " ", $data->created_at, " ", $data->updated_at . "<br>";
+    }
+
+    // Delete
+    echo "<br>Benutzer mit id 2 wieder löschen<br>";
+    DB::delete('DELETE FROM benutzer WHERE id = ?', [2]);
+    
+    // Read
+    echo "<br>";
+    $benutzer = DB::select('SELECT * FROM benutzer');
+    foreach ($benutzer as $data) {
+        echo $data->id, " ", $data->bezeichnung, " ", $data->created_at, " ", $data->updated_at . "<br>";
+    }
+
+    // Update
+    echo "<br>Benutzer mit id 1 bezeichnung ändern<br>";
+    DB::update('UPDATE benutzer SET bezeichnung = "Der Niclas" WHERE id = ?', [1]);
+  
+    // Read
+    echo "<br>";
+    $benutzer = DB::select('SELECT * FROM benutzer');
+    foreach ($benutzer as $data) {
+        echo $data->id, " ", $data->bezeichnung, " ", $data->created_at, " ", $data->updated_at . "<br>";
+    }
+
+
+
+    // DDL
+    echo "<br>geburtstag Feld hinzufügen<br>";
+    DB::statement('ALTER TABLE benutzer ADD geburtstag DATE');
 });

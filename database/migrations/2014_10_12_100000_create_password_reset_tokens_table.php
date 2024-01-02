@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        echo "up - password_reset_tokens - users";
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
@@ -23,6 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        echo "down - password_reset_tokens - users";
         Schema::dropIfExists('password_reset_tokens');
     }
 };
