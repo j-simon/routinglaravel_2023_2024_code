@@ -444,7 +444,7 @@ Route::get("/raw_sql_insert", function () {
     // Delete
     echo "<br>Benutzer mit id 2 wieder löschen<br>";
     DB::delete('DELETE FROM benutzer WHERE id = ?', [2]);
-    
+
     // Read
     echo "<br>";
     $benutzer = DB::select('SELECT * FROM benutzer');
@@ -455,7 +455,7 @@ Route::get("/raw_sql_insert", function () {
     // Update
     echo "<br>Benutzer mit id 1 bezeichnung ändern<br>";
     DB::update('UPDATE benutzer SET bezeichnung = "Der Niclas" WHERE id = ?', [1]);
-  
+
     // Read
     echo "<br>";
     $benutzer = DB::select('SELECT * FROM benutzer');
@@ -468,4 +468,668 @@ Route::get("/raw_sql_insert", function () {
     // DDL
     echo "<br>geburtstag Feld hinzufügen<br>";
     DB::statement('ALTER TABLE benutzer ADD geburtstag DATE');
+});
+
+
+
+/* 
+	uebung_17
+	
+	URL:
+	http://routinglaravel.test/interests
+	
+	http://routinglaravel.test/interests/create/1/Programmieren
+	http://routinglaravel.test/interests/create/2/Chillen
+	
+	http://routinglaravel.test/delete/2
+*/
+
+Route::get('interests', 'InterestController@index');
+Route::get('interests/create/{id}/{text}', 'InterestController@create');
+Route::get('interests/delete/{id}', 'InterestController@delete');
+
+
+
+
+
+
+
+
+
+
+/*
+Übung 17: Interessen, Datenbank und Controller
+
+    OK - Erstelle einen Controller, um unsere Tabelle interests mit Daten zu befüllen.
+    Erstelle eine Action, die mit einer Abfrage alle Interessen wiedergibt.
+    Erstelle eine Action samt Raw SQL Query, mit der sich Interessen anhand der Route-Parameter erstellen lassen.
+    Erstelle eine Action samt Raw SQL Query, um einzelne Interessen zu löschen.
+    Registriere die drei Actions in Routes.
+*/
+Route::get("/zeigeAlles", "InterestController@zeigeAlleInteressen");
+Route::get("/erstelleInteresse/{interesse}", "InterestController@erstelleInteresse");
+Route::get("/loescheInteresse/{id}", "InterestController@loescheInteresse");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Route::get("kapitel15_daten_einfuegen", function () {
+
+
+
+    $interestdata = [
+        [
+            'id' => 1,
+            'text' => 'Coding',
+        ],
+        [
+            'id' => 2,
+            'text' => 'Kochen',
+        ],
+        [
+            'id' => 3,
+            'text' => 'Singen',
+        ],
+        [
+            'id' => 4,
+            'text' => 'Fußball',
+        ],
+    ];
+
+    foreach ($interestdata as $interest) {
+        $interest = (object) $interest;
+        DB::table('interests')->insert(
+            ['text' => $interest->text, 'id' => $interest->id]
+        );
+    }
+
+    $postdata = [
+        [
+            'id' => 1,
+            'title' => 'Montag',
+            'text' => 'Montag ist schön zum Fußball spielen',
+            'interest_id' => 4,
+        ],
+        [
+            'id' => 2,
+            'title' => 'jeder Tag',
+            'text' => null,
+            'interest_id' => 1,
+        ],
+        [
+            'id' => 3,
+            'title' => 'Dienstag',
+            'text' => 'Dienstag koche ich.',
+            'interest_id' => 2,
+        ],
+        [
+            'id' => 4,
+            'title' => 'Mittwoch',
+            'text' => 'Mittwoch singe ich',
+            'interest_id' => 3,
+        ],
+        [
+            'id' => 5,
+            'title' => 'Mittwoch',
+            'text' => 'Mittwoch ist schlechtes Wetter',
+            'interest_id' => null,
+        ],
+        [
+            'id' => 6,
+            'title' => 'Donnerstag',
+            'text' => 'Donnerstag lerne ich den Query Builder',
+            'interest_id' => 1,
+        ],
+        [
+            'id' => 7,
+            'title' => 'Essen',
+            'text' => 'Ich bin hungrig.',
+            'interest_id' => null,
+        ],
+        [
+            'id' => 8,
+            'title' => 'Freitag',
+            'text' => null,
+            'interest_id' => 1,
+        ],
+        [
+            'id' => 9,
+            'title' => 'Samstag',
+            'text' => 'Samstag koche ich.',
+            'interest_id' => 2,
+        ],
+        [
+            'id' => 10,
+            'title' => 'Fußball',
+            'text' => null,
+            'interest_id' => 4,
+        ],
+        [
+            'id' => 11,
+            'title' => 'Coding',
+            'text' => 'Laravel macht Spaß',
+            'interest_id' => null,
+        ],
+    ];
+
+    foreach ($postdata as $post) {
+        $post = (object) $post;
+
+        DB::table('posts')->insert(
+            [
+                'id' => $post->id,
+                'title' => $post->title,
+                'text' => $post->text,
+                'interest_id' => $post->interest_id,
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now(),
+            ]
+        );
+    }
+});
+
+Route::get("/kapitel15", function () {
+
+    // 15.1 Debugging
+    // $wert=DB::table('interests');
+    // dump($wert);
+
+    // dump(DB::table('interests')->toSql());
+
+    //DB::enableQueryLog(); // Enable query log
+
+
+    // 15.2 INSERT INTO über Query-Builder
+    // DB::table('interests')->insert(['text'=>'LARAVEL','id'=>7]);
+    // INSERT INTO interests (id,text) VALUES ('6','PHP');
+
+    // multiple insert mit einem Methodenaufruf
+    // DB::table('interests')->insert(
+    //     [
+    //         ['text' => 'coding'],
+    //         ['text' => 'sport'],
+    //     ]
+    // );
+    // // mit einem SQL - Befehle ????
+    // INSERT INTO interests (text) VALUES ("coding"), ("php"), ("sport")
+
+
+
+    // 15.4 Daten ansehen - SELECT über Query-Builder
+    $interestsSql = DB::table('interests');
+    $interests = $interestsSql->get(); // fetchAll() Rückgabedatentyp? object/array nummerisch und assoziativ gemischt
+    dump($interests); // Datentyp? Illuminate\Support\Collection
+
+    $interests =   DB::table('interests')->get(); // Chaining - aneinanderketten von Methoden
+    // PHP
+    echo $interests[4]->text; // der 5.te array inhalt und von dem das attribut text
+
+    foreach ($interests as $interest) {
+        // echo $interest->id . " " . $interest->text . "<br>";
+    }
+
+    //dump(DB::getQueryLog()); // Show results of log
+
+    // 15.4 Daten ansehen
+    // first() anstelle von get() , LIMIT 1
+    $interest =   DB::table('interests')->first(); // object
+    dump($interest);
+    echo $interest->text;
+
+    // $interest =   DB::table('interests')->first(['text','id']); // object
+    // dump($interest);
+    // echo $interest->text;
+
+    // find()
+    $interest =   DB::table('interests')->find(2); //(( id=2 suchen!))
+    dump($interest);
+    
+
+     // value()
+     echo"<br>value()";
+     $interest =   DB::table('interests')->value('text'); 
+     // select `text` from `interests` limit 1
+     
+     dump($interest); // String
+
+     // pluck()
+     echo"<br>value()";
+     $interest =   DB::table('interests')->pluck('text'); 
+     // select `text` from `interests` 
+     
+     dump($interest); // array
+  
+
+     // select()
+     echo"<br>select()";
+     $interest =   DB::table('interests')->select(['text AS txt','id','text'])->get(); 
+     dump($interest); // array
+     $interest =   DB::table('interests')
+                    ->select('text AS txt')
+                    ->addSelect("id")
+                    ->addSelect("text")
+                    ->get(); 
+     // select `text` from `interests` 
+     
+     dump($interest); // array
+
+
+//  // where()
+     $interest =   DB::table('interests')
+     ->where("id", "<", "4")
+     ->where("id",">","2")
+     ->select('text AS txt')
+     ->addSelect("id")
+     ->addSelect("text")
+      ->get(); 
+// select `text` from `interests` 
+
+dump($interest); // array
+
+
+$alles = DB::table('interests')
+->select(["interests.text as itext","interests.*","posts.*"])
+->join('posts', 'interests.id', '=', 'posts.interest_id')
+->get();
+dump($alles);
+     return "<br>OK";
+
+});
+
+
+Route::get("kap15_teste_posts_interests_query_builder_methoden", function () {
+
+	echo "Übungen bis 18 muessen vorher gemacht worden sein, post und interest Tabelle müssen vorhanden und befüllt sein!";
+
+	// 15.1 Debugging
+	//  globaler Listener für SQL-Queries mit Dump-Ouput bei Bedarf aktivieren
+	DB::listen(function ($sql) {
+		dump("Automatischer Dump über den listener:");
+		dump($sql);
+	});
+
+	 echo "<br>Das Object des QueryBuilders<br>";
+	 $wert=DB::table('interests'); // es wird noch kein SQL Statement ausgeführt 
+     dump($wert);
+
+     dump(DB::table('interests')->toSql());
+
+     DB::enableQueryLog(); // Enable query log
+	 
+	 
+
+	// 15.2 Insert
+	echo "<br>15.2 und 15.3 insert() - Methode mit und ohne Query-Chaining<br>";
+
+	DB::table('interests')->insert(
+		['text' => 'test1 ohne chaining']
+	);
+	dump(DB::getQueryLog()); // Show results of log
+
+
+	$interests = DB::table('interests');
+	$interests->insert(
+		['text' => 'test2 mit chaining']
+	);
+	echo "<br>Ergebnis in der interest Tabelle<br>";
+	dump(DB::table('interests')->get());
+
+	// 15.4 Daten abrufen
+	echo "<br>15.4 get() - Methode<br>";
+	dump(DB::table('interests')->get());
+	$interests=DB::table('interests')->get();
+	dump($interests);
+	dump($interests[1]);
+
+	echo "<br>15.4 first() - Methode<br>";
+	dump(DB::table('interests')->first());
+
+	echo "<br>15.4 find(1) - Methode , Datensatz mit id 1 suchen<br>";
+	dump(DB::table('interests')->find(1)); // sucht Datensatz mmit der id = 1
+
+	echo "<br>15.4 value() - Methode für Spalte 'text' <br>";
+	dump(DB::table('interests')->value("text")); // ohne where wird der 1.Datensatz gewählt, und nur dessen Feld 'text'
+
+	echo "<br>15.4 pluck() - Methode für Spalte 'text'<br>";
+	dump(DB::table('interests')->pluck("text")); // alle Datensätze gewählt, und nur dessen Feld 'text', also eine Spalte
+
+	// 15.5 Select — Daten auswählen
+	echo "<br>15.5 Select — Daten auswählen text und created_at mit select() und die id noch mit addSelect()<br>";
+	//$query     = DB::table('interests')->select('text', 'created_at');
+	$query     = DB::table('interests')->select(['text as a', 'created_at']); // mit alias Umbennung
+	$interests = $query->addSelect('id')->get();
+	dump($interests);
+
+	// 15.6 where-Abfragen — Bedingungen festlegen
+	echo "<br>15.6 where-Abfragen — Bedingungen festlegen, hier whereId(1) <br>";
+	$interests = DB::table('interests')->whereId(1)->get();
+	dump($interests);
+	//erhalte alle Interessen, wo die ID gleich 1 ist.     
+
+	echo "<br>15.6 where-Abfragen — Bedingungen festlegen, hier id=1 <br>";
+	$interests = DB::table('interests')->where('id', 1)->get();
+	dump($interests);
+	//erhalte alle Interessen, wo die ID gleich 1 ist.  
+
+	echo "<br>15.6 where-Abfragen — Bedingungen festlegen, hier id<3 <br>";
+	$interests = DB::table('interests')->where('id', "<", 3)->get();
+	dump($interests);
+
+	echo "<br>15.6 where-Abfragen — Bedingungen festlegen, hier between 2 and 5<br>";
+	$interests = DB::table('interests')->whereBetween('id', [2, 5])->get();
+	dump($interests);
+
+
+	echo "<br>15.6 where-Abfragen — Bedingungen festlegen, hier whereIn('id',[1,2,4,7])<br>";
+	$interests = DB::table('interests')->whereIn('id', [1, 2, 4, 7])->get();
+	dump($interests);
+
+	echo "<br>15.6 where-Abfragen — Bedingungen festlegen, hier whereNotNull('text')<br>";
+	$interests = DB::table('interests')->whereNotNull('text')->get();
+	dump($interests);
+
+	echo "<br>15.6.2 where-Closures<br>";
+	$id   = 6;
+	$date = \Carbon\Carbon::now();
+
+	$interests = DB::table('interests')
+		->where('text', '=', 'test2 mit chaining')
+		->where(function ($query) use ($id, $date) {
+			$query->where('id', '=', $id);
+			$query->whereNULL('created_at'); //, '=', $date); // besser ;-)
+		})
+		->get();
+	dump($interests);
+
+	echo "<br>15.7 when - Abfragen, when z.B. kein Sortierparameter gegeben ist, wird dieses erkannt und dann unsortiert ausgegeben<br>";
+	$sortBy = null;
+
+	$interests = DB::table('interests')
+		->when($sortBy, function ($query, $sortBy) {
+			return $query->select($sortBy);
+		}, function ($query) {
+		return $query->select('text');
+	})
+		->get();
+	dump($interests);
+
+	echo "<br>15.8 Inhalte aktualisieren — Update<br>";
+	$interests = DB::table('interests')
+		->where('id', 1)
+		->update(['text' => "neues Hobby"]);
+	dump(DB::table('interests')->get());
+
+
+	echo "<br>15.8 Inhalte aktualisieren — updateOrInsert<br>";
+	$interests = DB::table('interests')
+		->where('id', 99)
+		->updateOrInsert(['text' => "insert99"]); // wird angelegt, mit autoid
+	dump(DB::table('interests')->get());
+
+	echo "<br>15.9 Inhalte löschen - Delete<br>";
+	DB::table('interests')->where('id', 1)->delete();
+	dump(DB::table('interests')->get());
+
+	echo "<br>15.10 Datenbankwerte sortiert ausgeben mit orderBy() <br>";
+	$interests = DB::table('interests')
+		->orderBy('id', 'desc') // von hoch nach tief
+		->get();
+	dump($interests);
+
+	echo "<br>15.11 Chuncking - Stückelung hier 5 Stück<br>";
+	$posts = DB::table('posts')->orderBy('id')->chunk(5, function ($posts) {
+		foreach ($posts as $post) {
+			//tu irgendwas mit den posts z.B. löschen oder bearbeiten
+			dump($post);
+			//aktion bis zur id 13 durchführen und dann das chunking abbrechen
+			if ($post->id === 13) {
+				return false;
+			}
+		}
+	});
+	dump($posts);
+
+	echo "<br>15.12 Aggregatfunktionen<br>";
+	$post_count = DB::table('posts')->count();
+	dump($post_count);
+
+	$highest_id = DB::table('posts')->max('id');
+	dump($highest_id);
+
+	$average_id = DB::table('posts')->avg('id');
+	dump($average_id);
+
+	echo "<br>15.13 Joins<br>";
+	$alles = DB::table('posts')
+
+		->join('interests', 'interests.id', '=', 'posts.interest_id')
+		->get();
+
+	dump($alles);
+
+	echo "<br>15.14 Unions<br>";
+	$first = DB::table('interests')->where('id', '<=', 4);
+
+	$second = DB::table('interests')
+		->where('id', '>', 4)
+		->union($first);
+
+	dump($first->get());
+	dump($second->get());
+
+	echo "<br>15.15 Raw Expressions<br>";
+	$interests = DB::table('interests')
+		->select(DB::raw('count(*) as interest_count'))
+		->get();
+	dump($interests); // Anzahl der Datensätze in interests-Tabelle
+
+	echo "<br>ENDE<br>";
+	return "";
+
+});
+
+
+Route::get("kap15_teste_posts_interests_query_builder_methoden", function () {
+
+	echo "Übungen bis 18 muessen vorher gemacht worden sein, post und interest Tabelle müssen vorhanden und befüllt sein!";
+
+	// 15.1 Debugging
+	//  globaler Listener für SQL-Queries mit Dump-Ouput bei Bedarf aktivieren
+	DB::listen(function ($sql) {
+		dump("Automatischer Dump über den listener:");
+		dump($sql);
+	});
+
+	 echo "<br>Das Object des QueryBuilders<br>";
+	 $wert=DB::table('interests'); // es wird noch kein SQL Statement ausgeführt 
+     dump($wert);
+
+     dump(DB::table('interests')->toSql());
+
+     DB::enableQueryLog(); // Enable query log
+	 
+	 
+
+	// 15.2 Insert
+	echo "<br>15.2 und 15.3 insert() - Methode mit und ohne Query-Chaining<br>";
+
+	DB::table('interests')->insert(
+		['text' => 'test1 ohne chaining']
+	);
+	dump(DB::getQueryLog()); // Show results of log
+
+
+	$interests = DB::table('interests');
+	$interests->insert(
+		['text' => 'test2 mit chaining']
+	);
+	echo "<br>Ergebnis in der interest Tabelle<br>";
+	dump(DB::table('interests')->get());
+
+	// 15.4 Daten abrufen
+	echo "<br>15.4 get() - Methode<br>";
+	dump(DB::table('interests')->get());
+	$interests=DB::table('interests')->get();
+	dump($interests);
+	dump($interests[1]);
+
+	echo "<br>15.4 first() - Methode<br>";
+	dump(DB::table('interests')->first());
+
+	echo "<br>15.4 find(1) - Methode , Datensatz mit id 1 suchen<br>";
+	dump(DB::table('interests')->find(1)); // sucht Datensatz mmit der id = 1
+
+	echo "<br>15.4 value() - Methode für Spalte 'text' <br>";
+	dump(DB::table('interests')->value("text")); // ohne where wird der 1.Datensatz gewählt, und nur dessen Feld 'text'
+
+	echo "<br>15.4 pluck() - Methode für Spalte 'text'<br>";
+	dump(DB::table('interests')->pluck("text")); // alle Datensätze gewählt, und nur dessen Feld 'text', also eine Spalte
+
+	// 15.5 Select — Daten auswählen
+	echo "<br>15.5 Select — Daten auswählen text und created_at mit select() und die id noch mit addSelect()<br>";
+	//$query     = DB::table('interests')->select('text', 'created_at');
+	$query     = DB::table('interests')->select(['text as a', 'created_at']); // mit alias Umbennung
+	$interests = $query->addSelect('id')->get();
+	dump($interests);
+
+	// 15.6 where-Abfragen — Bedingungen festlegen
+	echo "<br>15.6 where-Abfragen — Bedingungen festlegen, hier whereId(1) <br>";
+	$interests = DB::table('interests')->whereId(1)->get();
+	dump($interests);
+	//erhalte alle Interessen, wo die ID gleich 1 ist.     
+
+	echo "<br>15.6 where-Abfragen — Bedingungen festlegen, hier id=1 <br>";
+	$interests = DB::table('interests')->where('id', 1)->get();
+	dump($interests);
+	//erhalte alle Interessen, wo die ID gleich 1 ist.  
+
+	echo "<br>15.6 where-Abfragen — Bedingungen festlegen, hier id<3 <br>";
+	$interests = DB::table('interests')->where('id', "<", 3)->get();
+	dump($interests);
+
+	echo "<br>15.6 where-Abfragen — Bedingungen festlegen, hier between 2 and 5<br>";
+	$interests = DB::table('interests')->whereBetween('id', [2, 5])->get();
+	dump($interests);
+
+
+	echo "<br>15.6 where-Abfragen — Bedingungen festlegen, hier whereIn('id',[1,2,4,7])<br>";
+	$interests = DB::table('interests')->whereIn('id', [1, 2, 4, 7])->get();
+	dump($interests);
+
+	echo "<br>15.6 where-Abfragen — Bedingungen festlegen, hier whereNotNull('text')<br>";
+	$interests = DB::table('interests')->whereNotNull('text')->get();
+	dump($interests);
+
+	echo "<br>15.6.2 where-Closures<br>";
+	$id   = 6;
+	$date = \Carbon\Carbon::now();
+
+	$interests = DB::table('interests')
+		->where('text', '=', 'test2 mit chaining')
+		->where(function ($query) use ($id, $date) {
+			$query->where('id', '=', $id);
+			$query->whereNULL('created_at'); //, '=', $date); // besser ;-)
+		})
+		->get();
+	dump($interests);
+
+	echo "<br>15.7 when - Abfragen, when z.B. kein Sortierparameter gegeben ist, wird dieses erkannt und dann unsortiert ausgegeben<br>";
+	$sortBy = null;
+
+	$interests = DB::table('interests')
+		->when($sortBy, function ($query, $sortBy) {
+			return $query->select($sortBy);
+		}, function ($query) {
+		return $query->select('text');
+	})
+		->get();
+	dump($interests);
+
+	echo "<br>15.8 Inhalte aktualisieren — Update<br>";
+	$interests = DB::table('interests')
+		->where('id', 1)
+		->update(['text' => "neues Hobby"]);
+	dump(DB::table('interests')->get());
+
+
+	echo "<br>15.8 Inhalte aktualisieren — updateOrInsert<br>";
+	$interests = DB::table('interests')
+		->where('id', 99)
+		->updateOrInsert(['text' => "insert99"]); // wird angelegt, mit autoid
+	dump(DB::table('interests')->get());
+
+	echo "<br>15.9 Inhalte löschen - Delete<br>";
+	DB::table('interests')->where('id', 1)->delete();
+	dump(DB::table('interests')->get());
+
+	echo "<br>15.10 Datenbankwerte sortiert ausgeben mit orderBy() <br>";
+	$interests = DB::table('interests')
+		->orderBy('id', 'desc') // von hoch nach tief
+		->get();
+	dump($interests);
+
+	echo "<br>15.11 Chuncking - Stückelung hier 5 Stück<br>";
+	$posts = DB::table('posts')->orderBy('id')->chunk(5, function ($posts) {
+		foreach ($posts as $post) {
+			//tu irgendwas mit den posts z.B. löschen oder bearbeiten
+			dump($post);
+			//aktion bis zur id 13 durchführen und dann das chunking abbrechen
+			if ($post->id === 13) {
+				return false;
+			}
+		}
+	});
+	dump($posts);
+
+	echo "<br>15.12 Aggregatfunktionen<br>";
+	$post_count = DB::table('posts')->count();
+	dump($post_count);
+
+	$highest_id = DB::table('posts')->max('id');
+	dump($highest_id);
+
+	$average_id = DB::table('posts')->avg('id');
+	dump($average_id);
+
+	echo "<br>15.13 Joins<br>";
+	$alles = DB::table('posts')
+
+		->join('interests', 'interests.id', '=', 'posts.interest_id')
+		->get();
+
+	dump($alles);
+
+	echo "<br>15.14 Unions<br>";
+	$first = DB::table('interests')->where('id', '<=', 4);
+
+	$second = DB::table('interests')
+		->where('id', '>', 4)
+		->union($first);
+
+	dump($first->get());
+	dump($second->get());
+
+	echo "<br>15.15 Raw Expressions<br>";
+	$interests = DB::table('interests')
+		->select(DB::raw('count(*) as interest_count'))
+		->get();
+	dump($interests); // Anzahl der Datensätze in interests-Tabelle
+
+	echo "<br>ENDE<br>";
+	return "";
+
 });

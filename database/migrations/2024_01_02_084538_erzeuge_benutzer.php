@@ -19,6 +19,7 @@ return new class extends Migration
             $table->id();
             // string(..,100) entspricht VARCHAR(100)
             $table->string("bezeichnung",100);// ->unique(); // UNIQUE macht das Feld eindeutig inhaltlich
+            $table->decimal("kommazahl",8,6);
             $table->timestamps(); // created_at und updated_at Felder , TIMESTAMPS ohne Automatik Füllung
         });
 
