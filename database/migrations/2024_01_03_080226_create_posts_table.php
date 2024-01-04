@@ -16,7 +16,7 @@ return new class extends Migration
             $table->increments('id');
             $table->string('title');
             $table->text('text')->nullable();
-            $table->integer('interest_id')->nullable();
+            $table->integer('interest_id')->nullable(); // FK
             $table->timestamps();
         });
     }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("text",30);
             $table->timestamps();
+            $table->softDeletes();// deleted_at alle auf NULL zuerst
            
         });
     }
