@@ -1208,15 +1208,15 @@ Route::get('uebung_19', function () {
 use App\Post;
 
 Route::get("/teste_modell", function (Request $request) {
-    /*
+    
     // CRUD
-
+;
     // Eloquent Alternative 1
     // Create / INSERT INTO
     $post = new Post; // der sucht nach der table "posts"
     $post->title = "Post hat mich erstellt";
     $post->text = "Dies ist ein Post mit dem Post-Model erstellt";
-
+  
     $post->save();
 
     // Eloquent Alternative 2
@@ -1226,8 +1226,11 @@ Route::get("/teste_modell", function (Request $request) {
     // Add [title] to fillable property to allow mass assignment on [App\Post]
     //$datenAusEinemFormular=;
     Post::create($request->all());
-    //    ['title'=>'über create erzeugt','text'=>'na geht das?']
-    
+      /* [
+        'title'=>'über create erzeugt',
+        'text'=>'na geht das?'
+       ]*/
+    /*
 
     // Read
     $posts = Post::all();
@@ -1298,4 +1301,144 @@ Route::get("eloquent_one_to_many_beziehung",function(){
 		echo "<br>";
 	}
    
+});
+
+
+
+/*
+	uebung_21
+	
+	URLs zum Eintragen der Datensätze:
+
+	http://routinglaravel.test/interest/create/Programmieren
+	http://routinglaravel.test/interest/create/Lesen
+	http://routinglaravel.test/interest/create/Politik
+	http://routinglaravel.test/interest/create/Sport
+	http://routinglaravel.test/interest/create/Gaming
+
+	http://routinglaravel.test/article/create/LaravelCRUD/CreateReadUpdateDelete/1
+	http://routinglaravel.test/article/create/Politik/Umwelt ist toll Wirtschaft aber auch/3
+	http://routinglaravel.test/article/create/Formel1/Autorennen macht viel Spa? beim Zusehen/4
+
+	URLs zum Ansehen der Datensätze:
+
+	http://routinglaravel.test/articles
+	http://routinglaravel.test/interests
+
+	
+	
+*/
+use App\Interest; 
+use App\Article; 
+
+// Artikel erstellen
+Route::get('article/create/{title}/{text}/{interest_id}/', function($title,$text,$interest_id){
+
+    $article = new Article;
+
+    $article->title = $title;
+    $article->text = $text;
+    $article->interest_id = $interest_id;
+
+    $article->save();
+});
+
+// Interessen erstellen
+Route::get('interest/create/{text}', function($text){
+    $interest = new Interest;
+
+    $interest->text = $text;
+  
+    $interest->save();
+});
+
+// Artikel anzeigen
+Route::get('articles', function(){
+	$articles = Article::all();
+
+    dump( $articles[10]->title);
+	dump($articles);	
+});
+
+
+
+
+
+// Interessen anzeigen
+Route::get('interests', function(){
+
+	/* // suchen , finden und loeschen (dauerhaft!!!/ richtiges DELETE FROM ....)
+     $interest = Interest::whereId(4)->first();
+     $interest->delete(); // softdelete!
+     dump($interest);
+     */
+	$interests = Interest::all();
+	dump($interests);	
+	
+
+	/*
+    // suchen nach ID
+    $interests = Interest::findOrFail(1); // wird gefunden!
+    //$interests = Interest::findOrFail(3443543); // wird nicht gefunden! 404
+    var_dump($interests);
+    */
+
+    /*
+    // suchen nach exaktem Text 
+    $interests = Interest::whereText("Politik")->get(); // wird gefunden!
+    // oder nur erstes, wenn mehrere!
+    //$interests = Interest::whereText("Politik")->first();
+    var_dump($interests);
+    */
+
+    /*
+    // suchen , finden und Text aendern
+    $interest = Interest::whereText("Politik")->first(); // geht nur einmal!! dann Fehler!
+    $interest->text="Chillen";
+    $interest->save();
+    var_dump($interest);
+    */
+
+    /*
+    // suchen , finden und loeschen (dauerhaft!!!/ richtiges DELETE FROM ....)
+    $interest = Interest::whereId(3)->first();
+    $interest->delete();
+    var_dump($interest);
+    */
+});
+Route::get('interest/delete/{id}', function($id){
+	$interest = Interest::whereId($id)->first();
+    $interest->delete();
+    var_dump($interest);
+
+});
+
+// http://routinglaravel.test/interests/with_trashed
+
+Route::get('interests/with_trashed', function(){
+	$interests_trashed = Interest::withTrashed()->get();
+    dump($interests_trashed);
+
+});
+
+// http://routinglaravel.test/interests/with_trashed
+
+Route::get('interests/only_trashed', function(){
+	$interests_trashed = Interest::onlyTrashed()->get();
+    dump($interests_trashed);
+
+});
+
+Route::get('article/create_ma/{title}/{text}', function($title,$text){
+
+    //Post::create( ['title' => 'Test', 'text' => 'text']);
+    Article::create( ['title' => $title, 'text' => $text]);
+
+});
+
+
+Route::get('subquery', function(){
+
+	$articles = Article::get();  
+	dump($articles);
 });

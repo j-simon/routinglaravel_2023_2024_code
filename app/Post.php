@@ -17,6 +17,7 @@ class Post extends Model
     //protected $fillable = ['title','text',"id"]; // Schutz gegen Massen Zuweisung Hack/Versuch von GET/POSt Request Werten
     protected $guarded = ['interest_id', 'created_at', "updated_at"];
 
+
     public function scopeZeigeNurFuenf($query)
     {
 
