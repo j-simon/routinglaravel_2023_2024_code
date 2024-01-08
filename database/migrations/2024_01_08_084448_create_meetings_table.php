@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('interests', function (Blueprint $table) {
-            //
-           // $table->softDeletes(); // hinzufügen!!!!!
+        Schema::create('meetings', function (Blueprint $table) {
+            $table->id();
+            $table->string("ueberschrift",100); // VARCHAR(100) NOT NULL
+            $table->date("datum"); // DATE // NOT NULL
+            $table->timestamps();
         });
     }
 
@@ -22,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('interests', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('meetings');
     }
 };

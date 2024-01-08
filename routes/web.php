@@ -1208,15 +1208,15 @@ Route::get('uebung_19', function () {
 use App\Post;
 
 Route::get("/teste_modell", function (Request $request) {
-    
-    // CRUD
-;
+
+        // CRUD
+    ;
     // Eloquent Alternative 1
     // Create / INSERT INTO
     $post = new Post; // der sucht nach der table "posts"
     $post->title = "Post hat mich erstellt";
     $post->text = "Dies ist ein Post mit dem Post-Model erstellt";
-  
+
     $post->save();
 
     // Eloquent Alternative 2
@@ -1226,7 +1226,7 @@ Route::get("/teste_modell", function (Request $request) {
     // Add [title] to fillable property to allow mass assignment on [App\Post]
     //$datenAusEinemFormular=;
     Post::create($request->all());
-      /* [
+    /* [
         'title'=>'über create erzeugt',
         'text'=>'na geht das?'
        ]*/
@@ -1269,7 +1269,7 @@ Route::get("/teste_modell", function (Request $request) {
 });
 
 
-Route::get("eloquent_one_to_many_beziehung",function(){
+Route::get("eloquent_one_to_many_beziehung", function () {
 
     echo "<h3>1:n Beziehung zwischen posts und interests</h3>";
 
@@ -1278,29 +1278,28 @@ Route::get("eloquent_one_to_many_beziehung",function(){
     $alles = DB::table('interests')
         ->select(["interests.text AS itext", "interests.*", "posts.*"])
         ->join('posts', 'interests.id', '=', 'posts.interest_id')
-        ->orderBy("posts.id","asc")
+        ->orderBy("posts.id", "asc")
         ->get();
     dump($alles);
     foreach ($alles as $datensatz) {
-        echo $datensatz->id, " - ", $datensatz->title, " - ", $datensatz->text, "  -> ", $datensatz->itext,"<br>";
+        echo $datensatz->id, " - ", $datensatz->title, " - ", $datensatz->text, "  -> ", $datensatz->itext, "<br>";
     }
 
 
-    
+
     echo "<br>Lösung mit Eloquent<br>";
 
     //$posts = Post::with('interest')->get(); // mit eager loading
-	$posts = Post::get(); // ohne eager loading, lazy loading
-	dump($posts);
+    $posts = Post::get(); // ohne eager loading, lazy loading
+    dump($posts);
 
-	foreach ($posts as $post) {
+    foreach ($posts as $post) {
         echo $post->id . " - ";
-		echo $post->title . " - ";
+        echo $post->title . " - ";
         echo $post->text . " -> ";
-		echo $post->interest->text; // magic
-		echo "<br>";
-	}
-   
+        echo $post->interest->text; // magic
+        echo "<br>";
+    }
 });
 
 
@@ -1328,11 +1327,12 @@ Route::get("eloquent_one_to_many_beziehung",function(){
 	
 	
 */
-use App\Interest; 
-use App\Article; 
+
+use App\Interest;
+use App\Article;
 
 // Artikel erstellen
-Route::get('article/create/{title}/{text}/{interest_id}/', function($title,$text,$interest_id){
+Route::get('article/create/{title}/{text}/{interest_id}/', function ($title, $text, $interest_id) {
 
     $article = new Article;
 
@@ -1344,20 +1344,20 @@ Route::get('article/create/{title}/{text}/{interest_id}/', function($title,$text
 });
 
 // Interessen erstellen
-Route::get('interest/create/{text}', function($text){
+Route::get('interest/create/{text}', function ($text) {
     $interest = new Interest;
 
     $interest->text = $text;
-  
+
     $interest->save();
 });
 
 // Artikel anzeigen
-Route::get('articles', function(){
-	$articles = Article::all();
+Route::get('articles', function () {
+    $articles = Article::all();
 
-    dump( $articles[10]->title);
-	dump($articles);	
+    dump($articles[10]->title);
+    dump($articles);
 });
 
 
@@ -1365,18 +1365,18 @@ Route::get('articles', function(){
 
 
 // Interessen anzeigen
-Route::get('interests', function(){
+Route::get('interests', function () {
 
-	/* // suchen , finden und loeschen (dauerhaft!!!/ richtiges DELETE FROM ....)
+    /* // suchen , finden und loeschen (dauerhaft!!!/ richtiges DELETE FROM ....)
      $interest = Interest::whereId(4)->first();
      $interest->delete(); // softdelete!
      dump($interest);
      */
-	$interests = Interest::all();
-	dump($interests);	
-	
+    $interests = Interest::all();
+    dump($interests);
 
-	/*
+
+    /*
     // suchen nach ID
     $interests = Interest::findOrFail(1); // wird gefunden!
     //$interests = Interest::findOrFail(3443543); // wird nicht gefunden! 404
@@ -1406,39 +1406,101 @@ Route::get('interests', function(){
     var_dump($interest);
     */
 });
-Route::get('interest/delete/{id}', function($id){
-	$interest = Interest::whereId($id)->first();
+Route::get('interest/delete/{id}', function ($id) {
+    $interest = Interest::whereId($id)->first();
     $interest->delete();
     var_dump($interest);
-
 });
 
 // http://routinglaravel.test/interests/with_trashed
 
-Route::get('interests/with_trashed', function(){
-	$interests_trashed = Interest::withTrashed()->get();
+Route::get('interests/with_trashed', function () {
+    $interests_trashed = Interest::withTrashed()->get();
     dump($interests_trashed);
-
 });
 
 // http://routinglaravel.test/interests/with_trashed
 
-Route::get('interests/only_trashed', function(){
-	$interests_trashed = Interest::onlyTrashed()->get();
+Route::get('interests/only_trashed', function () {
+    $interests_trashed = Interest::onlyTrashed()->get();
     dump($interests_trashed);
-
 });
 
-Route::get('article/create_ma/{title}/{text}', function($title,$text){
+Route::get('article/create_ma/{title}/{text}', function ($title, $text) {
 
     //Post::create( ['title' => 'Test', 'text' => 'text']);
-    Article::create( ['title' => $title, 'text' => $text]);
-
+    Article::create(['title' => $title, 'text' => $text]);
 });
 
 
-Route::get('subquery', function(){
+Route::get('subquery', function () {
 
-	$articles = Article::get();  
-	dump($articles);
+    $articles = Article::get();
+    dump($articles);
+});
+
+
+Route::get("collection_filtern", function () {
+
+    // array erstellen 
+    $array = [];
+    for ($i = 0; $i < 10000; $i++) {
+        $array[] = random_int(1, 100);
+    }
+
+    $collection = collect($array);
+
+    dump($collection);
+
+    $collection = $collection->filter(function ($value, $key) {
+        return $key % 5 == 0;
+    });
+    dump($collection);
+});
+
+
+Route::get("/collection_datenbankanbfrage", function () {
+
+    // 1. SQL Datenbank Verarbeitungszeit und Geld
+    $articles = \App\Article::select(["id", "title"])->where("id", ">", 1)->get(); //es wird eine Datenbankanfrage ausgeführt
+    dump($articles);
+
+    // optische Ausgabe
+    foreach ($articles as $article) {
+        echo $article->id, " - ", $article->title . "<br>";
+    }
+    echo "<br>Output der iterierenden filter()-Methode<br>";
+
+    // Nachverarbeitung
+    // 2. PHP Interpreter Verarbeitungzeit und Abrechnung
+    $articles = $articles->filter(function ($value, $key) { // filter iteriert über alle Elemente
+        echo $key . " - " . $value . "-" . $value->title . " --- ";
+
+        if ($value->title === "neuer artikel") {
+            echo "gefunden!<br>";
+            return 0;
+        } else {
+            echo "nicht gefunden!<br>";
+            return 1;
+        }
+        // return 1;
+    }); //keine Datenbankanfrage
+    dump($articles);
+
+    // optische Ausgabe
+    // foreach($articles as $article)
+    // {
+    //     echo $article->id," - " ,$article->title."<br>";
+    // }
+    return "Und?";
+});
+
+
+Route::get("collection_test", function () {
+    $vornamen = ['Jens', "Tim", "Anne"]; // Array
+    dump($vornamen);
+
+    $vornamen = collect($vornamen); // Object / Collection
+    dump($vornamen);
+
 });

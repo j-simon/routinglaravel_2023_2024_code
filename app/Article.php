@@ -16,13 +16,13 @@ class Article extends Model
     //Mutator aaa => AAA
     public function setTitleAttribute($title)
     {
-        echo "setTitleAttribute - aufgerufen";
+        //echo "setTitleAttribute - aufgerufen";
         $this->attributes['title'] = strtoupper($title);
     }
     //Accessor AAA => aaa
     public function getTitleAttribute()
     {
-        echo "getTitleAttribute - aufgerufen";
+       // echo "getTitleAttribute - aufgerufen";
         return strtolower($this->attributes['title']);
     }
 }

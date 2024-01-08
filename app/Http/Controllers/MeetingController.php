@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use \App\Meeting;
 use Illuminate\Http\Request;
 
 class MeetingController extends Controller
@@ -11,8 +11,18 @@ class MeetingController extends Controller
      */
     public function index()
     {
-        //
-        echo "jau, hat geklappt! wir sind per Get hier hin gekommen";
+        // alle Meetings aus der Database anzeigen
+        
+        // einmalige Vorarbeiten:
+        // Migrations-Datei mit artisan erstellen, gewünschte Tabellenfelder einfügen und migrieren
+        // ein Model Meeting erstellen
+
+        //  jetzt mit Eloquent alle Meeting Models einlesen (alle Datensätze)
+              
+        $meetings = Meeting::all();
+
+        // View mit parent-layout einmalig vorbereiten und die index-blade bekommt inhalt
+        return view("meetings.index",compact("meetings"));
     }
 
     /**
@@ -21,7 +31,8 @@ class MeetingController extends Controller
     public function create()
     {
         //
-        echo "jau, hat geklappt! wir sind per Get hier hin gekommen , es ist /create";
+        //echo "jau, hat geklappt! wir sind per Get hier hin gekommen , es ist /create";
+        return view("meetings.create");
     }
 
     /**
@@ -30,8 +41,23 @@ class MeetingController extends Controller
     public function store(Request $request)
     {
         //
-        echo "jau, hat geklappt! wir sind per Post hier hin gekommen";
+        $request->validate([
+            'ueberschrift' => 'required|max:100',
+            'datum' => ['required', 'max:10'],
+        ]);
+
+        $formularWerte=$request->all();
+        //dd($formularWerte);
+        
+        $meeting = new Meeting();
+        $meeting->ueberschrift=$formularWerte['ueberschrift'];
+        $meeting->datum=$formularWerte['datum'];
+        $meeting->save();
+
+        return view("meetings.store");
     }
+
+   
 
     /**
      * Display the specified resource.
@@ -39,19 +65,11 @@ class MeetingController extends Controller
     public function show(string $id)
     {
         
-        echo "hai, von show!, du hast $id übergeben<br>";
-        // etwas sinnvolles gecodet
-        
         // Display the specified resource.
+        $meeting=Meeting::find($id);
         
-        $db = new \PDO("mysql:host=localhost;dbname=test", "root", "root");
-        $sqlBefehl = "SELECT * FROM  meetings WHERE id=".$id;
-        echo $sqlBefehl."<br>";
-        $stmt = $db->query($sqlBefehl);
-        $datensaetze=$stmt->fetchAll();
-        var_dump($datensaetze);
-
-        
+        return view("meetings.show",compact("meeting")); 
+               
     }
 
     /**
@@ -60,7 +78,8 @@ class MeetingController extends Controller
     public function edit(string $id)
     {
         //
-        echo "hai, von edit!, du hast $id übergeben";
+       $meeting = Meeting::find($id);
+       return view("meetings.edit",compact("meeting"));
     }
 
     /**
@@ -69,7 +88,18 @@ class MeetingController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        echo "$id soll geupdated werden<br>";
         echo "jau, hat geklappt! wir sind per Put hier hin gekommen";
+
+        $formularWerte=$request->all();
+        //dd($formularWerte);
+        
+        $meeting = Meeting::find($id);
+        $meeting->ueberschrift=$formularWerte['ueberschrift'];
+        $meeting->datum=$formularWerte['datum'];
+        $meeting->save();
+
+        return view("meetings.update");
     }
 
     /**
@@ -77,7 +107,10 @@ class MeetingController extends Controller
      */
     public function destroy(string $id)
     {
-        //
-        echo "jau, hat geklappt! wir sind per Delete hier hin gekommen";
+        $meeting=Meeting::find($id);
+        $meeting->delete(); 
+        
+        return view("meetings.delete");       
+
     }
 }
