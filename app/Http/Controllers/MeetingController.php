@@ -40,7 +40,7 @@ class MeetingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validierung der Inhalte der Felder
         $request->validate([
             'ueberschrift' => 'required|max:100',
             'datum' => ['required', 'max:10'],

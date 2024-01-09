@@ -176,7 +176,8 @@ Route::get("/datenschutz", "FooterMenuController@gibDatenschutzAus");
   DELETE          meetings/{meeting} ....................... meetings.destroy › MeetingController@destroy  
   GET|HEAD        meetings/{meeting}/edit ........................ meetings.edit › MeetingController@edit 
 */
-Route::resource("/meetings", "MeetingController"); // Anpasssung durch Positivliste
+Route::resource("/meetings", "MeetingController");
+
 
 // alternative Einschränkungen der 7 definierten REST-Routen
 
@@ -1435,8 +1436,8 @@ Route::get('article/create_ma/{title}/{text}', function ($title, $text) {
 
 Route::get('subquery', function () {
 
-    $articles = Article::get();
-    dump($articles);
+    $articles = Article::addSelect(['interest' => Interest::select('text')->whereColumn('id', 'interest_id')->limit(1)])->get();  
+	dd($articles);
 });
 
 
@@ -1502,5 +1503,164 @@ Route::get("collection_test", function () {
 
     $vornamen = collect($vornamen); // Object / Collection
     dump($vornamen);
+
+});
+
+// uebung_22
+
+// use Illuminate\Support\Facades\Route;
+// use Illuminate\Support\Facades\DB;
+use App\Page;
+// use App\Post;
+use App\Tag;
+
+
+Route::get('test_m_n', function () {
+
+	$article = Article::create(
+		[
+			'title' => 'Bilderrahmen',
+			'text' => ' Dies ist ein schöner Bilderrahmen'
+		],
+	);
+
+	$interest = Interest::create(
+		[
+			'text' => 'Malen',
+		],
+	);
+
+	$article->interests()->attach($interest); // Beziehung in der pivot-Tavelle herstellen
+	//$article->interests()->detach($interest); // Beziehung in der pivot-Tavelle loeschen
+	
+	echo "<h2>Artikel 1 und alle Interessen</h2>";
+	$article = Article::first();
+	dump($article);
+	foreach ($article->interests as $interest) {
+		dump($interest);
+	}
+
+	// Tag
+    	$article->tags()->create(['title' => 'geheim']);
+
+	echo "<h2>Artikel 1 und alle Tags</h2>";
+	
+	//$article = Article::first(); // lazy loading
+	$article = Article::with('tags')->first(); // eager loading
+	
+	dump($article);
+	foreach ($article->tags as $tag) {
+		dump($tag);
+	}
+});
+
+Route::get('uebung_23', function () {
+   
+    // Das Array wird in eine Collection überführt
+    $collect = collect([1,2,3,4,5,6,7,8,9]);
+    dump($collect);
+    
+    // Die neue Ergbnis Collection wird in 2 Schritten gebildet:
+    //
+    // 1.Schritt: filter (where Bedingung)
+    // hier: wähle alle Elemente deren Modulus 3 Wert 0 ist.
+    //
+    // das sind : 3,6 und 9
+    //
+    // 2.Schritt: neue Zuordnung der verbliebenen Elemente mit map (update mit einer Zuordnungslogik)
+    // hier: ändere die verbliebenen Elemente mit *9
+    //
+    // das sind : 9,54 und 81
+    //
+    
+    $ergebnis = $collect->filter( function ($item) {
+            return $item % 3 === 0;
+        }
+    
+    ) ->map(
+    
+    
+        function ($item) {
+            return $item * 9;
+        }
+    
+    );
+    
+    dump($ergebnis);
+    /*
+    object(Illuminate\Support\Collection)#3710 (1) {
+      ["items":protected]=>
+      array(3) {
+        [2]=>
+        int(27)
+        [5]=>
+        int(54)
+        [8]=>
+        int(81)
+      }
+    }
+    */
+    
+});
+
+Route::get('uebung_24', function () {
+
+    $collect = collect(['eloquent','laravel','laravel','collection','collection','model','migration','eloquent','collection','php','php','php']);
+    
+    dump($collect);
+    
+    $ergebnis = $collect->unique();//->map(function($item){ return strtoupper($item);}  ) ;  
+    dump($ergebnis);
+    
+    // Das Ergebnis entsteht in 2 Schritten:
+    //
+    // 1.Schritt: entfernen der doppleten Einträge(unique)
+    //
+    // 'eloquent','laravel','collection','model','migration','php'
+    //
+    // 2.Schritt: neue Zuordnung der verbliebenen Elemente mit map (update mit einer Zuordnungslogik)
+    // hier: ändere die verbliebenen Elemente mit strtoupper(), also GROSSBUCHSTABEN 
+    //
+    // das sind :
+    
+    /*
+    Illuminate\Support\Collection {#4337
+         all: [
+           0 => "ELOQUENT",
+           1 => "LARAVEL",
+           3 => "COLLECTION",
+           5 => "MODEL",
+           6 => "MIGRATION",
+           9 => "PHP",
+         ],
+       }
+    */
+});
+
+
+// uebung_25 
+// article Controller existiert jetzt alle routen erlauben!
+Route::resource('article', 'ArticleController');
+
+Route::get("zahlen_kollektion",function() {
+
+    $zahlen = ['jens','tim']; //['one' => 1, 2,3,4,5,6,7,8,9];
+    dump($zahlen);
+    
+    $zahlenKollektion=collect($zahlen);
+    dump($zahlenKollektion);
+
+    $zahlenKollektion=$zahlenKollektion->filter(function ($value, $key) {
+        echo "value = ".$value." -  key = ".$key."<br>";   // schauen in den Schritt der Iteration
+        
+        if( $key!=="one") return true; // ja 
+    });
+    dump($zahlenKollektion);
+
+    $zahlenKollektion=$zahlenKollektion->map(function ($value, $key) {
+        echo "value = ".$value." -  key = ".$key."<br>";  
+        return strtoupper($value);
+    });
+    dump($zahlenKollektion);
 
 });

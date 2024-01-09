@@ -7,4 +7,6 @@ class Article extends Controller
     public function handleDieRoute()
     {
     }
+
+    
 }

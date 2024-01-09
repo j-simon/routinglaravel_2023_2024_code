@@ -5,6 +5,8 @@
 @section("content")
 <h2>Neues Meetings anlegen</h2>
 
+<?php var_dump($errors);?>
+
 <form action="{{ route("meetings.store") }}" method="POST">
     @csrf
     Überschrift<input type="text" name="ueberschrift"><br>

@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('articles', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string("title");
-            $table->text('text');
-            $table->string('likes')->nullable();
-            $table->integer('interest_id')->nullable();
+        Schema::create('article_interest', function (Blueprint $table) {
+            $table->unsignedInteger('article_id');
+            $table->unsignedInteger('interest_id');
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('articles');
+        Schema::dropIfExists('article_interes');
     }
 };
