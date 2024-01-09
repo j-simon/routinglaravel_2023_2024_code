@@ -68,6 +68,10 @@ class MeetingController extends Controller
         // Display the specified resource.
         $meeting=Meeting::find($id);
         
+        // per session merken was wir gerade anschauen
+        $idArray=[];
+        $idArray[]=$id;
+        session(['meetingID' => $idArray]);
         return view("meetings.show",compact("meeting")); 
                
     }

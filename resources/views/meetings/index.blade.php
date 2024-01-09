@@ -6,6 +6,7 @@
 
 
 <a href="{{ route("meetings.create") }}">Neues Meeting anlegen!</a>
+Du warst zuletzt bei: {{ session('meetingID').implode(" ") }}
 <h1>Alle Meetings</h1>
 
 <table class="table">
