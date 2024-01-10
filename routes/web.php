@@ -16,7 +16,9 @@ use Illuminate\Http\Request;
 
 
 Route::get('/', function () { // / Startseite
-    return view("welcome"); // im ordner resources/views/welcome.blade.php
+    
+    $article = session()->get('article',"----");
+    return view("welcome",compact("article")); // im ordner resources/views/welcome.blade.php
 });
 
 
@@ -1344,6 +1346,15 @@ Route::get('article/create/{title}/{text}/{interest_id}/', function ($title, $te
     $article->save();
 });
 
+Route::get('article/show/{id}',function($id){
+    $article = Article::find($id);
+    dump($article->title);
+    session(['article' => $article->title]);
+	
+	  dump(session()->get('article'));
+	
+    return $article;
+});
 // Interessen erstellen
 Route::get('interest/create/{text}', function ($text) {
     $interest = new Interest;

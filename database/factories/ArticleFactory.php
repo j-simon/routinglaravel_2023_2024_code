@@ -18,8 +18,8 @@ class ArticleFactory extends Factory
     {
         return [
             //
-            'title' => fake()->words(3,true),
-            'text' =>  fake()->sentence(12,true),
+            'title'=> $this->faker->city() ,
+            'text' => $this->faker->iban() ,
         ];
     }
 }

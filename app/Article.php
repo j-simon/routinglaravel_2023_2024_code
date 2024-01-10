@@ -13,15 +13,15 @@ class Article extends Model
 
     protected $with = ['tags'];
 
-    public function setLikesAttribute($value)
-    {
-        $this->attributes['likes'] = encrypt($value);
-    }
+    // public function setLikesAttribute($value)
+    // {
+    //     $this->attributes['likes'] = encrypt($value);
+    // }
 
-    public function getLikesAttribute($value)
-    {
-        return decrypt($value);
-    }
+    // public function getLikesAttribute($value)
+    // {
+    //     return decrypt($value);
+    // }
 
 
     public function interests()

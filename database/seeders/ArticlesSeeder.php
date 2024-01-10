@@ -35,6 +35,7 @@ class ArticlesSeeder extends Seeder
 
         // Sinn des Seeder ist die Anzahl der zu erzeugenden Datensaätze festlegen
         // Die Inhalte eines Datensatzes werden werden über Factory gesteuert
-         \App\Article::factory(1000)->create();
+         
+         \App\Article::factory()->count(5)->create();
     }
 }
